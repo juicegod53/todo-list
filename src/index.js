@@ -10,6 +10,7 @@ class Todo {
 }
 
 class Project {
+    static currentProject;
     constructor(name) {
         this.name = name
         this.todos = []
@@ -20,13 +21,26 @@ class Project {
         this.todos.push(todo)
     }
 
+    static switchCurrentProject(project) {
+        Project.currentProject = project
+    }
+
 }
 
-const project = new Project("Home")
-project.createTodo("eat food", "nom", new Date("September 5, 2025"), "high")
-console.log(project.todos)
+var projects = []
 
+projects[0] = new Project("Home")
 
+Project.switchCurrentProject(projects[0])
+Project.currentProject.createTodo("eat food", "nom", new Date("September 7, 2025"), "high")
 
+console.log(Project.currentProject.todos)
+
+projects[1] = new Project("Study")
+
+Project.switchCurrentProject(projects[1])
+Project.currentProject.createTodo("read book", "read", new Date("September 8, 2025"), "normal")
+
+console.log(Project.currentProject.todos)
 
 
