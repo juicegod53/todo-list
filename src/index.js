@@ -36,20 +36,27 @@ class Project {
     static addProject(project) {
         Project.projects.push(project)
     }
+
+    static removeTodo(todo) {
+        Project.currentProject.todos = Project.currentProject.todos.filter(x => x !== todo)
+    }
 }
 
 class Display {
     static displayProjects(projects) {
         document.getElementById("projects").innerHTML = ""
+
         for (let i = 0; i < projects.length; i++) {
             const projectText = document.createElement("p")
-            projectText.addEventListener("click", (event) => {
-                const projectNames = Project.projects.map((x) => x.title)
-                const projectName = event.target.textContent
-                const projectIndex = projectNames.indexOf(projectName)
-                Project.switchCurrentProject(projects[projectIndex])
+            projectText.project = projects[i]
+
+            projectText.addEventListener("click", () => {
+                Project.switchCurrentProject(projectText.project)
+                Display.displayTodos(Project.currentProject.todos)
+
                 console.log(Project.currentProject)
             })
+
             projectText.textContent = projects[i].title
             document.getElementById("projects").appendChild(projectText)
         }
@@ -57,10 +64,34 @@ class Display {
 
     static displayTodos(todos) {
         document.getElementById("todos").innerHTML = ""
+
         for (let i = 0; i < todos.length; i++) {
+            const todo = document.createElement("div")
             const todoText = document.createElement("p")
+            const todoEdit = document.createElement("button")
+            const todoDelete = document.createElement("button")
+
+            todo.todo = todos[i]
             todoText.textContent = todos[i].title
-            document.getElementById("todos").appendChild(todoText)
+            todoEdit.textContent = "Edit"
+            todoDelete.textContent = "Delete"
+
+            todoEdit.addEventListener("click", () => {
+                console.log("edit")
+            })
+
+            todoDelete.addEventListener("click", () => {
+                Project.removeTodo(todo.todo)
+                todo.remove()
+
+                console.log(Project.currentProject.todos)
+                
+            })
+            todo.appendChild(todoText)
+            todo.appendChild(todoEdit)
+            todo.appendChild(todoDelete)
+
+            document.getElementById("todos").appendChild(todo)
         }
     }
 }
@@ -68,16 +99,13 @@ class Display {
 Project.addProject(new Project("Home"))
 
 Project.switchCurrentProject(Project.projects[0])
-Project.currentProject.createTodo("eat food", "nom", new Date("September 7, 2025"), "high")
-
-console.log(Project.currentProject.todos)
+Project.currentProject.createTodo("eat food", "nom", new Date("September 27, 2025"), "high")
+Project.currentProject.createTodo("lift weights", "heavy ones", new Date("September 25, 2025"), "normal")
 
 Project.addProject(new Project("Study"))
 
 Project.switchCurrentProject(Project.projects[1])
-Project.currentProject.createTodo("read book", "read", new Date("September 8, 2025"), "normal")
-
-console.log(Project.currentProject.todos)
+Project.currentProject.createTodo("read book", "read", new Date("September 26, 2025"), "normal")
 
 Display.displayProjects(Project.projects)
 Display.displayTodos(Project.currentProject.todos)
