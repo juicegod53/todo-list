@@ -68,16 +68,23 @@ class Display {
         for (let i = 0; i < todos.length; i++) {
             const todo = document.createElement("div")
             const todoText = document.createElement("p")
+            const todoDate = document.createElement("p")
             const todoEdit = document.createElement("button")
             const todoDelete = document.createElement("button")
 
             todo.todo = todos[i]
             todoText.textContent = todos[i].title
+            todoDate.textContent = todos[i].dueDate.toDateString()
             todoEdit.textContent = "Edit"
             todoDelete.textContent = "Delete"
 
             todoEdit.addEventListener("click", () => {
-                console.log("edit")
+                document.getElementById("title").value = todo.todo.title
+                document.getElementById("desc").value = todo.todo.description
+                document.getElementById("duedate").valueAsDate = todo.todo.dueDate
+                document.getElementById("priority").value = todo.todo.priority
+
+                document.getElementById("dialog").showModal()
             })
 
             todoDelete.addEventListener("click", () => {
@@ -88,6 +95,7 @@ class Display {
                 
             })
             todo.appendChild(todoText)
+            todo.appendChild(todoDate)
             todo.appendChild(todoEdit)
             todo.appendChild(todoDelete)
 
