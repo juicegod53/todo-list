@@ -43,6 +43,37 @@ class Project {
 }
 
 class Display {
+    static currentEditingTodo = null
+
+    static assignButtons() {
+        document.getElementById("close").addEventListener("click", () => {
+            Display.currentEditingTodo = null
+            document.getElementById("edit-dialog").close()
+        })
+
+        document.getElementById("create-project").addEventListener("click", () => {
+
+            Project.addProject(new Project("yeah"))
+            Display.displayProjects(Project.projects)
+            Display.displayTodos(Project.currentProject.todos)
+        })
+
+        document.getElementById("submit").addEventListener("click", () => {
+            if (!Display.currentEditingTodo) return;
+
+            const todo = Display.currentEditingTodo
+            todo.todo.title = document.getElementById("todo-title").value
+            todo.todo.description = document.getElementById("desc").value
+            todo.todo.dueDate = document.getElementById("duedate").valueAsDate
+            todo.todo.priority = document.getElementById("priority").value
+
+            Display.currentEditingTodo = null
+            document.getElementById("edit-dialog").close()
+            Display.displayTodos(Project.currentProject.todos)
+        })
+
+    }
+
     static displayProjects(projects) {
         document.getElementById("projects").innerHTML = ""
 
@@ -79,12 +110,14 @@ class Display {
             todoDelete.textContent = "Delete"
 
             todoEdit.addEventListener("click", () => {
-                document.getElementById("title").value = todo.todo.title
+                Display.currentEditingTodo = todo
+
+                document.getElementById("todo-title").value = todo.todo.title
                 document.getElementById("desc").value = todo.todo.description
                 document.getElementById("duedate").valueAsDate = todo.todo.dueDate
                 document.getElementById("priority").value = todo.todo.priority
 
-                document.getElementById("dialog").showModal()
+                document.getElementById("edit-dialog").showModal()
             })
 
             todoDelete.addEventListener("click", () => {
@@ -94,6 +127,7 @@ class Display {
                 console.log(Project.currentProject.todos)
                 
             })
+
             todo.appendChild(todoText)
             todo.appendChild(todoDate)
             todo.appendChild(todoEdit)
@@ -103,6 +137,8 @@ class Display {
         }
     }
 }
+
+Display.assignButtons()
 
 Project.addProject(new Project("Home"))
 

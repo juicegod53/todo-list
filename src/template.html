@@ -6,11 +6,11 @@
     <title>Todo List</title>
 </head>
 <body>
-    <dialog id="dialog">
+    <dialog id="edit-dialog">
         <form id="edit-todo">
             <div>
-                <label for="title">Title:</label>
-                <input type="text" id="title" name="title">
+                <label for="todo-title">Title:</label>
+                <input type="text" id="todo-title" name="todo-title">
             </div>
             <div>
                 <label for="desc">Description:</label>
@@ -28,13 +28,27 @@
                     <option value="high">High</option>
                 </select>
             </div>
-            <div>
-                <button type="submit" id="submit" for="edit-todo">Submit</button>
-                <button id="close">Close</button>
+            <div id="form-buttons">
+                <button type="button" id="submit" for="edit-todo">Submit</button>
+                <button type="button" id="close">Close</button>
             </div>
         </form>
     </dialog>
+    <dialog id="project-dialog">
+        <form id="create-project-form">
+            <div>
+                <label for="project-title">Title:</label>
+                <input type="text" id="project-title" name="project-title">
+            </div>
+            <div id="form-buttons">
+                <button type="button" id="project-submit" for="create-project-form">Submit</button>
+                <button type="button" id="project-close">Close</button>
+            </div>
+        </form>
+    </dialog>
+    <button id="create-project">Create Project</button>
     <div id="projects"></div>
+    <button id="create-todo">Create Todo</button>
     <div id="todos"></div>
 </body>
 </html>
