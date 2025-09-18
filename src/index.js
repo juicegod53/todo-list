@@ -46,30 +46,44 @@ class Display {
     static currentEditingTodo = null
 
     static assignButtons() {
-        document.getElementById("close").addEventListener("click", () => {
+        document.getElementById("edit-todo-close").addEventListener("click", () => {
             Display.currentEditingTodo = null
-            document.getElementById("edit-dialog").close()
+            document.getElementById("edit-todo-dialog").close()
         })
 
-        document.getElementById("create-project").addEventListener("click", () => {
-
-            Project.addProject(new Project("yeah"))
-            Display.displayProjects(Project.projects)
-            Display.displayTodos(Project.currentProject.todos)
-        })
-
-        document.getElementById("submit").addEventListener("click", () => {
+        document.getElementById("edit-todo-submit").addEventListener("click", () => {
             if (!Display.currentEditingTodo) return;
 
             const todo = Display.currentEditingTodo
+
             todo.todo.title = document.getElementById("todo-title").value
             todo.todo.description = document.getElementById("desc").value
             todo.todo.dueDate = document.getElementById("duedate").valueAsDate
             todo.todo.priority = document.getElementById("priority").value
 
             Display.currentEditingTodo = null
-            document.getElementById("edit-dialog").close()
+            document.getElementById("edit-todo-dialog").close()
             Display.displayTodos(Project.currentProject.todos)
+        })
+
+        document.getElementById("create-project").addEventListener("click", () => {
+            document.getElementById("create-project-dialog").showModal()
+        })
+
+        document.getElementById("create-project-submit").addEventListener("click", () => {
+            const newProjectTitle = document.getElementById("project-title").value
+            const project = new Project(newProjectTitle)
+
+            Project.addProject(project)
+            Display.displayProjects(Project.projects)
+
+            document.getElementById("create-project-dialog").close()
+            document.getElementById("project-title").value = ""
+        })
+
+        document.getElementById("create-project-close").addEventListener("click", () => {
+            document.getElementById("create-project-dialog").close()
+            document.getElementById("project-title").value = ""
         })
 
     }
@@ -117,7 +131,7 @@ class Display {
                 document.getElementById("duedate").valueAsDate = todo.todo.dueDate
                 document.getElementById("priority").value = todo.todo.priority
 
-                document.getElementById("edit-dialog").showModal()
+                document.getElementById("edit-todo-dialog").showModal()
             })
 
             todoDelete.addEventListener("click", () => {
