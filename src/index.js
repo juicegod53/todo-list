@@ -83,6 +83,7 @@ class Display {
 
         document.getElementById("create-todo").addEventListener("click", () => {
             document.getElementById("edit-todo-form").reset()
+            document.getElementById("duedate").valueAsDate = new Date()
             document.getElementById("edit-todo-dialog").showModal()
         })
 
