@@ -52,6 +52,11 @@ class Display {
         })
 
         document.getElementById("edit-todo-submit").addEventListener("click", () => {
+            if (document.getElementById("todo-title").value == "") {
+                document.getElementById("edit-todo-dialog").close()
+                return
+            }
+
             if (!Display.currentEditingTodo) {
                 Project.currentProject.createTodo(document.getElementById("todo-title").value, document.getElementById("desc").value, document.getElementById("duedate").valueAsDate, document.getElementById("priority").value)      
                 Display.displayTodos(Project.currentProject.todos)  
@@ -106,18 +111,35 @@ class Display {
         document.getElementById("projects").innerHTML = ""
 
         for (let i = 0; i < projects.length; i++) {
+            const project = document.createElement("div")
             const projectText = document.createElement("p")
-            projectText.project = projects[i]
+            const projectDelete = document.createElement("button")
+
+            project.project = projects[i]
 
             projectText.addEventListener("click", () => {
-                Project.switchCurrentProject(projectText.project)
+                Project.switchCurrentProject(project.project)
+                Display.displayTodos(Project.currentProject.todos)
+            })
+
+            projectDelete.addEventListener("click", () => {
+                if (Project.projects.length == 1) return;
+                Project.projects.splice(i, 1);
+                Project.currentProject = Project.projects[0]
+
+                Display.displayProjects(Project.projects)
                 Display.displayTodos(Project.currentProject.todos)
 
-                console.log(Project.currentProject)
+                console.log(Project.projects)
             })
 
             projectText.textContent = projects[i].title
-            document.getElementById("projects").appendChild(projectText)
+            projectDelete.textContent = "Delete"
+
+            project.appendChild(projectText)
+            project.appendChild(projectDelete)
+
+            document.getElementById("projects").appendChild(project)
         }
     }
 
@@ -153,7 +175,7 @@ class Display {
 
             todoDelete.addEventListener("click", () => {
                 Project.removeTodo(todo.todo)
-                todo.remove()
+                Display.displayTodos(Project.currentProject.todos)
 
                 console.log(Project.currentProject.todos)
                 
