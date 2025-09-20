@@ -52,7 +52,13 @@ class Display {
         })
 
         document.getElementById("edit-todo-submit").addEventListener("click", () => {
-            if (!Display.currentEditingTodo) return;
+            if (!Display.currentEditingTodo) {
+                Project.currentProject.createTodo(document.getElementById("todo-title").value, document.getElementById("desc").value, document.getElementById("duedate").valueAsDate, document.getElementById("priority").value)      
+                Display.displayTodos(Project.currentProject.todos)  
+                
+                document.getElementById("edit-todo-dialog").close()
+                return
+            }
 
             const todo = Display.currentEditingTodo
 
@@ -70,12 +76,20 @@ class Display {
             document.getElementById("create-project-dialog").showModal()
         })
 
+        document.getElementById("create-todo").addEventListener("click", () => {
+            document.getElementById("edit-todo-form").reset()
+            document.getElementById("edit-todo-dialog").showModal()
+        })
+
         document.getElementById("create-project-submit").addEventListener("click", () => {
             const newProjectTitle = document.getElementById("project-title").value
-            const project = new Project(newProjectTitle)
 
-            Project.addProject(project)
-            Display.displayProjects(Project.projects)
+            if (newProjectTitle != "") {
+                const project = new Project(newProjectTitle)
+
+                Project.addProject(project)
+                Display.displayProjects(Project.projects)
+            }
 
             document.getElementById("create-project-dialog").close()
             document.getElementById("project-title").value = ""
@@ -123,7 +137,7 @@ class Display {
             todoEdit.textContent = "Edit"
             todoDelete.textContent = "Delete"
 
-            todoEdit.addEventListener("click", () => {
+            function editTodo() {
                 Display.currentEditingTodo = todo
 
                 document.getElementById("todo-title").value = todo.todo.title
@@ -132,7 +146,10 @@ class Display {
                 document.getElementById("priority").value = todo.todo.priority
 
                 document.getElementById("edit-todo-dialog").showModal()
-            })
+            }
+
+            todoText.addEventListener("click", editTodo)
+            todoEdit.addEventListener("click", editTodo)
 
             todoDelete.addEventListener("click", () => {
                 Project.removeTodo(todo.todo)
