@@ -57,6 +57,10 @@ class Display {
                 return
             }
 
+            if (!document.getElementById("duedate").valueAsDate) {
+                document.getElementById("duedate").valueAsDate = new Date()
+            }
+
             if (!Display.currentEditingTodo) {
                 Project.currentProject.createTodo(document.getElementById("todo-title").value, document.getElementById("desc").value, document.getElementById("duedate").valueAsDate, document.getElementById("priority").value)      
                 Display.displayTodos(Project.currentProject.todos)  
@@ -83,7 +87,6 @@ class Display {
 
         document.getElementById("create-todo").addEventListener("click", () => {
             document.getElementById("edit-todo-form").reset()
-            document.getElementById("duedate").valueAsDate = new Date()
             document.getElementById("edit-todo-dialog").showModal()
         })
 
