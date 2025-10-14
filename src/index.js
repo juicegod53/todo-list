@@ -17,7 +17,7 @@ class Todo {
 }
 
 class Project {
-    static currentProject;  
+    static currentProject;
     static projects = [];
     constructor(title) {
         this.title = title
@@ -27,6 +27,7 @@ class Project {
     createTodo(title, description, dueDate, priority) {
         const todo = new Todo(title, description, dueDate, priority)
         this.todos.push(todo)
+        localStorage.setItem("projects", JSON.stringify(Project.projects))
     }
 
     static switchCurrentProject(project) {
@@ -35,10 +36,12 @@ class Project {
 
     static addProject(project) {
         Project.projects.push(project)
+        localStorage.setItem("projects", JSON.stringify(Project.projects))
     }
 
     static removeTodo(todo) {
         Project.currentProject.todos = Project.currentProject.todos.filter(x => x !== todo)
+        localStorage.setItem("projects", JSON.stringify(Project.projects))
     }
 }
 
@@ -197,16 +200,32 @@ class Display {
 
 Display.assignButtons()
 
-Project.addProject(new Project("Home"))
+var storedProjects = JSON.parse(localStorage.getItem("projects")) || []
+
+Project.projects = storedProjects.map(projData => {
+    const project = new Project(projData.title)
+    project.todos = projData.todos.map(todoData => {
+        return new Todo(
+            todoData.title,
+            todoData.description,
+            new Date(todoData.dueDate), // ✅ convert string back to Date
+            todoData.priority
+        )
+    })
+    return project
+})
+
+console.log(Project.projects)
+
+if (Project.projects.length == 0) {
+    Project.addProject(new Project("Home"))
+
+    Project.switchCurrentProject(Project.projects[0])
+    Project.currentProject.createTodo("eat food", "nom", new Date("September 27, 2025"), "high")
+    Project.currentProject.createTodo("lift weights", "heavy ones", new Date("September 25, 2025"), "normal")
+}
 
 Project.switchCurrentProject(Project.projects[0])
-Project.currentProject.createTodo("eat food", "nom", new Date("September 27, 2025"), "high")
-Project.currentProject.createTodo("lift weights", "heavy ones", new Date("September 25, 2025"), "normal")
-
-Project.addProject(new Project("Study"))
-
-Project.switchCurrentProject(Project.projects[1])
-Project.currentProject.createTodo("read book", "read", new Date("September 26, 2025"), "normal")
 
 Display.displayProjects(Project.projects)
 Display.displayTodos(Project.currentProject.todos)
