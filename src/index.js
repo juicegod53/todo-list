@@ -131,8 +131,10 @@ class Display {
 
             projectDelete.addEventListener("click", () => {
                 if (Project.projects.length == 1) return;
+                
                 Project.projects.splice(i, 1);
                 Project.currentProject = Project.projects[0]
+                localStorage.setItem("projects", JSON.stringify(Project.projects))
 
                 Display.displayProjects(Project.projects)
                 Display.displayTodos(Project.currentProject.todos)
