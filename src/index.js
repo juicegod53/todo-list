@@ -143,7 +143,7 @@ class Display {
             })
 
             projectText.textContent = projects[i].title
-            projectDelete.textContent = "Delete"
+            projectDelete.textContent = "X"
 
             project.appendChild(projectText)
             project.appendChild(projectDelete)
